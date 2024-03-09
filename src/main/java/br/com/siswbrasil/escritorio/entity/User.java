@@ -1,7 +1,8 @@
 package br.com.siswbrasil.escritorio.entity;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -67,7 +68,7 @@ public class User extends Tracking {
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<Role> permissions = new ArrayList<>();
+	private Set<Role> permissions = new HashSet<>();
 
 	@Transient
 	private List<String> roles;
