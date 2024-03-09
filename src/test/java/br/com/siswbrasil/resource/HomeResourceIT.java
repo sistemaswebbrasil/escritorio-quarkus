@@ -1,4 +1,4 @@
-package br.com.siswbrasil;
+package br.com.siswbrasil.resource;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
