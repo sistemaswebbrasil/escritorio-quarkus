@@ -9,7 +9,7 @@ import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
-public class UserService {
+public class UserService implements BaseService<User,Long>{
 
 	@Inject
 	private UserRepository repository;

@@ -3,6 +3,8 @@ package br.com.siswbrasil.escritorio.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,7 +37,7 @@ public class Role  extends Tracking  {
 	@Column(name = "DESCRIPTION")
 	private String description;
 
-	
+	@JsonIgnore	
 	@ManyToMany(mappedBy="permissions")
 	private List<User> users = new ArrayList<>();
 
