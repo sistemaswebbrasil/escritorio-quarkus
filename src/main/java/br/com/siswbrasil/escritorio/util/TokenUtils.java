@@ -9,7 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.microprofile.jwt.Claims;
+
 import br.com.siswbrasil.escritorio.entity.Role;
+import br.com.siswbrasil.escritorio.entity.User;
+import br.com.siswbrasil.escritorio.model.Profile;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.jwt.build.JwtClaimsBuilder;
 
@@ -19,26 +23,30 @@ import io.smallrye.jwt.build.JwtClaimsBuilder;
  */
 public class TokenUtils {
 	
-	public static String generateToken(String username, List<String> roles, Long duration, String issuer) throws Exception {
+
+	public static Profile responseLogged(User user, Long duration, String issuer) throws Exception {
 		String privateKeyLocation = "/privatekey.pem";
 		PrivateKey privateKey = readPrivateKey(privateKeyLocation);
-		
-		JwtClaimsBuilder claimsBuilder = Jwt.claims();
 		long currentTimeInSecs = currentTimeInSecs();
 		
-		Set<String> groups = new HashSet<>();
-		System.out.println(roles);
-		for (String role : roles) {
-			groups.add(role);
-		};	
-
-		claimsBuilder.issuer(issuer);
-		claimsBuilder.subject(username);
-		claimsBuilder.issuedAt(currentTimeInSecs);
-		claimsBuilder.expiresAt(currentTimeInSecs + duration);
-		claimsBuilder.groups(groups);
-
-		return claimsBuilder.jws().signatureKeyId(privateKeyLocation).sign(privateKey);
+        String token =
+                Jwt.issuer(issuer) 
+                  .groups(user.getRoles()) 
+                  .claim(Claims.sub, user.getId().toString())                  
+                  .claim(Claims.preferred_username, user.getName())                  
+                  .claim(Claims.email, user.getEmail())
+                  .claim(Claims.given_name, user.getName())
+                  .claim(Claims.exp,currentTimeInSecs + duration)
+                  .claim(Claims.iat, currentTimeInSecs)
+                  .claim(Claims.iss, issuer)
+                  .claim(Claims.upn, user.getEmail())
+                  .jws().signatureKeyId(privateKeyLocation)
+                .sign(privateKey);		
+		
+		
+		var profile = new Profile(user.getId(),user.getName(), user.getEmail(), token, user.getRoles());
+		return profile;
+		
 	}
 
 	public static String generateToken(String username, Set<Role> roles, Long duration, String issuer) throws Exception {

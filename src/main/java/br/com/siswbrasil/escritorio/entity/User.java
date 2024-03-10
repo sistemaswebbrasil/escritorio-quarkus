@@ -71,11 +71,11 @@ public class User extends Tracking {
 	private Set<Role> permissions = new HashSet<>();
 
 	@Transient
-	private List<String> roles;
+	private Set<String> roles;
 
-	public List<String> getRoles() {
+	public Set<String> getRoles() {
 		if (!permissions.isEmpty()) {
-			return permissions.stream().map(i -> i.getName().toUpperCase()).collect(Collectors.toList());
+			return permissions.stream().map(i -> i.getName().toUpperCase()).collect(Collectors.toSet());
 		}
 		return roles;
 	}
